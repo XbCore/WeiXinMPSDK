@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------------------------
+/*----------------------------------------------------------------
     Copyright (C) 2023 Senparc
     
     文件名：MailListApi.cs
@@ -114,10 +114,12 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
 
         /// <summary>
         /// 获取成员
+        /// 企业微信已禁用该API(2022年8月15日10点)
         /// </summary>
         /// <param name="accessTokenOrAppKey">调用接口凭证（AccessToken）或AppKey（根据AccessTokenContainer.BuildingKey(corpId, corpSecret)方法获得）</param>
         /// <param name="userId">员工UserID</param>
         /// <returns></returns>
+        [Obsolete]
         public static GetMemberResult GetMember(string accessTokenOrAppKey, string userId)
         {
             return ApiHandlerWapper.TryCommonApi(accessToken =>
@@ -278,6 +280,7 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
         /* <param name="status">0获取全部员工，1获取已关注成员列表，2获取禁用成员列表，4获取未关注成员列表。status可叠加</param>*/
         /// <summary>
         /// 获取部门成员(详情)【QY移植修改】
+        /// 企业微信已禁用该API(2022年8月15日10点)
         /// </summary>
         /// <param name="accessTokenOrAppKey">调用接口凭证（AccessToken）或AppKey（根据AccessTokenContainer.BuildingKey(corpId, corpSecret)方法获得）</param>
         /// <param name="departmentId">获取的部门id</param>
@@ -287,6 +290,7 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
         /// 2016-05-03：Zeje添加参数maxJsonLength：企业号通讯录扩容后，存在Json长度不够的情况。
         /// </remarks>
         /// <returns></returns>
+        [Obsolete]
         public static GetDepartmentMemberInfoResult GetDepartmentMemberInfo(string accessTokenOrAppKey, long departmentId, int? fetchChild /*, int status, *//*int? maxJsonLength = null*/)
         {
             return ApiHandlerWapper.TryCommonApi(accessToken =>
@@ -389,11 +393,34 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
         }
 
         /// <summary>
-        /// 获取部门列表【QY移植修改】
+        /// 获取部门ID列表【QY移植修改】
         /// </summary>
         /// <param name="accessTokenOrAppKey">调用接口凭证（AccessToken）或AppKey（根据AccessTokenContainer.BuildingKey(corpId, corpSecret)方法获得）</param>
         /// <param name="id">部门id。获取指定部门及其下的子部门。 如果不填，默认获取全量组织架构</param>
         /// <returns></returns>
+        public static GetDepartmentIdListResult GetDepartmentIdList(string accessTokenOrAppKey, long? id = null)
+        {
+            return ApiHandlerWapper.TryCommonApi(accessToken =>
+            {
+                var url = string.Format(Config.ApiWorkHost + "/cgi-bin/department/simplelist?access_token={0}", accessToken.AsUrlData());
+
+                if (id.HasValue)
+                {
+                    url += string.Format("&id={0}", id.Value);
+                }
+
+                return CommonJsonSend.Send<GetDepartmentIdListResult>(null, url, null, CommonJsonSendType.GET);
+            }, accessTokenOrAppKey);
+        }
+
+        /// <summary>
+        /// 获取部门列表【QY移植修改】
+        /// 企业微信已禁用该API(2022年8月15日10点)
+        /// </summary>
+        /// <param name="accessTokenOrAppKey">调用接口凭证（AccessToken）或AppKey（根据AccessTokenContainer.BuildingKey(corpId, corpSecret)方法获得）</param>
+        /// <param name="id">部门id。获取指定部门及其下的子部门。 如果不填，默认获取全量组织架构</param>
+        /// <returns></returns>
+        [Obsolete]
         public static GetDepartmentListResult GetDepartmentList(string accessTokenOrAppKey, long? id = null)
         {
             return ApiHandlerWapper.TryCommonApi(accessToken =>
@@ -693,10 +720,12 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
 
         /// <summary>
         /// 【异步方法】获取成员【QY移植修改】
+        /// 企业微信已禁用该API(2022年8月15日10点)
         /// </summary>
         /// <param name="accessTokenOrAppKey">调用接口凭证（AccessToken）或AppKey（根据AccessTokenContainer.BuildingKey(corpId, corpSecret)方法获得）</param>
         /// <param name="userId">员工UserID</param>
         /// <returns></returns>
+        [Obsolete]
         public static async Task<GetMemberResult> GetMemberAsync(string accessTokenOrAppKey, string userId)
         {
             return await ApiHandlerWapper.TryCommonApiAsync(async accessToken =>
@@ -854,6 +883,7 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
         /*/// <param name="status">0获取全部员工，1获取已关注成员列表，2获取禁用成员列表，4获取未关注成员列表。status可叠加</param>*/
         /// <summary>
         /// 【异步方法】获取部门成员(详情)【QY移植修改】
+        /// 企业微信已禁用该API(2022年8月15日10点)
         /// </summary>
         /// <param name="accessTokenOrAppKey">调用接口凭证（AccessToken）或AppKey（根据AccessTokenContainer.BuildingKey(corpId, corpSecret)方法获得）</param>
         /// <param name="departmentId">获取的部门id</param>
@@ -863,6 +893,7 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
         /// 2016-05-03：Zeje添加参数maxJsonLength：企业号通讯录扩容后，存在Json长度不够的情况。
         /// </remarks>
         /// <returns></returns>
+        [Obsolete]
         public static async Task<GetDepartmentMemberInfoResult> GetDepartmentMemberInfoAsync(string accessTokenOrAppKey, long departmentId, int? fetchChild /*, int status, *//*int? maxJsonLength = null*/)
         {
             return await ApiHandlerWapper.TryCommonApiAsync(async accessToken =>
@@ -943,8 +974,6 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
 
                 return await Senparc.Weixin.CommonAPIs.CommonJsonSend.SendAsync<WorkJsonResult>(null, url, data, CommonJsonSendType.POST, timeOut, jsonSetting: jsonSetting);
             }, accessTokenOrAppKey);
-
-
         }
 
         /// <summary>
@@ -961,16 +990,37 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
 
                 return await CommonJsonSend.SendAsync<WorkJsonResult>(null, url, null, CommonJsonSendType.GET);
             }, accessTokenOrAppKey);
+        }
 
+        /// <summary>
+        /// 获取部门ID列表【QY移植修改】
+        /// </summary>
+        /// <param name="accessTokenOrAppKey">调用接口凭证（AccessToken）或AppKey（根据AccessTokenContainer.BuildingKey(corpId, corpSecret)方法获得）</param>
+        /// <param name="id">部门id。获取指定部门及其下的子部门。 如果不填，默认获取全量组织架构</param>
+        /// <returns></returns>
+        public static async Task<GetDepartmentIdListResult> GetDepartmentIdListAsync(string accessTokenOrAppKey, long? id = null)
+        {
+            return await ApiHandlerWapper.TryCommonApiAsync( async accessToken =>
+            {
+                var url = string.Format(Config.ApiWorkHost + "/cgi-bin/department/simplelist?access_token={0}", accessToken.AsUrlData());
 
+                if (id.HasValue)
+                {
+                    url += string.Format("&id={0}", id.Value);
+                }
+
+                return await CommonJsonSend.SendAsync<GetDepartmentIdListResult>(null, url, null, CommonJsonSendType.GET);
+            }, accessTokenOrAppKey);
         }
 
         /// <summary>
         /// 【异步方法】获取部门列表【QY移植修改】
+        /// 企业微信已禁用该API(2022年8月15日10点)
         /// </summary>
         /// <param name="accessTokenOrAppKey">调用接口凭证（AccessToken）或AppKey（根据AccessTokenContainer.BuildingKey(corpId, corpSecret)方法获得）</param>
         /// <param name="id">部门ID。获取指定部门ID下的子部门</param>
         /// <returns></returns>
+        [Obsolete]
         public static async Task<GetDepartmentListResult> GetDepartmentListAsync(string accessTokenOrAppKey, long? id = null)
         {
             return await ApiHandlerWapper.TryCommonApiAsync(async accessToken =>
@@ -984,8 +1034,6 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
 
                 return await CommonJsonSend.SendAsync<GetDepartmentListResult>(null, url, null, CommonJsonSendType.GET);
             }, accessTokenOrAppKey);
-
-
         }
 
         #endregion
@@ -1162,8 +1210,7 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
         }
 
         #endregion
-
-
+        
         /// <summary>
         /// 【异步方法】【Work中未定义】邀请成员关注
         /// 认证号优先使用微信推送邀请关注，如果没有weixinid字段则依次对手机号，邮箱绑定的微信进行推送，全部没有匹配则通过邮件邀请关注。 邮箱字段无效则邀请失败。 非认证号只通过邮件邀请关注。邮箱字段无效则邀请失败。 已关注以及被禁用用户不允许发起邀请关注请求。
@@ -1239,5 +1286,28 @@ namespace Senparc.Weixin.Work.AdvancedAPIs
         }
 
         #endregion
+    }
+}
+namespace Senparc.Weixin.Work.AdvancedAPIs.MailList
+{
+    public class GetDepartmentIdListResult : WorkJsonResult
+    {
+        public List<DepartmentIdList> department_id { get; set; }
+    }
+
+    public class DepartmentIdList
+    {
+        /// <summary>
+        /// 部门id
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 上级部门id
+        /// </summary>
+        public long parentid { get; set; }
+        /// <summary>
+        /// 在父部门中的次序值。order值小的排序靠前。
+        /// </summary>
+        public long order { get; set; }
     }
 }
